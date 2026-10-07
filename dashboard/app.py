@@ -118,72 +118,81 @@ st.line_chart(
     y="Revenue"
 )
 
+st.subheader("Product Performance")
+
+col1,col2 = st.columns(2)
+
 # Top 10 Products by Revenue
 
-st.subheader("Top 10 Products by Revenue")
+with col1:
+    st.write("Top 10 Products by Revenue")
+    top_products = (
+        filtered_df
+        .groupby("Description")["Revenue"]
+        .sum()
+        .sort_values(ascending=False)
+        .head(10)
+        .sort_values()
+    )
 
-top_products = (
-    filtered_df
-    .groupby("Description")["Revenue"]
-    .sum()
-    .sort_values(ascending=False)
-    .head(10)
-    .sort_values()
-)
-
-st.bar_chart(top_products)
+    st.bar_chart(top_products)
 
 # Top 10 Products by quantity sold
 
-st.subheader("Top 10 Products by Quantity Sold")
+with col2:
+    st.write("Top 10 Products by Quantity Sold")
 
-top_products_quantity = (
-    filtered_df
-    .groupby("Description")["Quantity"]
-    .sum()
-    .sort_values(ascending=False)
-    .head(10)
-    .sort_values()
-)
+    top_products_quantity = (
+        filtered_df
+        .groupby("Description")["Quantity"]
+        .sum()
+        .sort_values(ascending=False)
+        .head(10)
+        .sort_values()
+    )
 
-st.bar_chart(top_products_quantity)
+    st.bar_chart(top_products_quantity)
+
+st.subheader("Customer Analysis")
+
+col1, col2 = st.columns(2)
 
 # Top 10 customers by revenue
 
-st.subheader("Top 10 Customers by Revenue")
+with col1:
+    st.write("Top 10 Customers by Revenue")
 
-top_customers = (
-    filtered_df
-    .groupby("CustomerID")["Revenue"]
-    .sum()
-    .sort_values(ascending=False)
-    .head(10)
-    .sort_values()
-)
+    top_customers = (
+        filtered_df
+        .groupby("CustomerID")["Revenue"]
+        .sum()
+        .sort_values(ascending=False)
+        .head(10)
+        .sort_values()
+    )
 
-st.bar_chart(top_customers)
+    st.bar_chart(top_customers)
 
 # Customer purchase frequency
 
-st.subheader("Customer Purchase Frequency")
+with col2:
+    st.write("Customer Purchase Frequency")
 
-customer_orders = (
-    filtered_df
-    .groupby("CustomerID")["InvoiceNo"]
-    .nunique()
-)
+    customer_orders = (
+        filtered_df
+        .groupby("CustomerID")["InvoiceNo"]
+        .nunique()
+    )
 
-one_time_customers = (customer_orders == 1).sum()
-repeat_customers = (customer_orders > 1).sum()
+    one_time_customers = (customer_orders == 1).sum()
+    repeat_customers = (customer_orders > 1).sum()
 
-customer_frequency = pd.Series(
-    {
+    customer_frequency = pd.Series({
         "One-time Customers": one_time_customers,
         "Repeat Customers": repeat_customers
-    }
-)
+    })
 
-st.bar_chart(customer_frequency)
+    st.bar_chart(customer_frequency)
 
 # Top 10 countries by revenue
 
